@@ -1,0 +1,35 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}!
+{% load custom_tags %}
+{% load custom_censor %}
+
+{% block title %}
+Products
+{% endblock title %}
+
+{% block content %}
+   <h1>Новости!</h1>
+   <h3>{% current_time '%b %d %Y' %}</h3>
+   <hr>
+   {% if products %}
+       <table>
+           <tr>
+               <td>Название</td>
+               <td>Описание</td>
+               <td>Дата загрузки</td>
+
+           </tr>
+
+           {% for product in products %}
+           <tr>
+               <td>{{ post.title|censor }}</td>
+               <td>{{ post.text|censor.description|truncatewords:20 }}</td>
+               <td>{{ post.time_loaded|date:"F d, Y" }}</td>
+
+
+           </tr>
+           {% endfor %}
+
+       </table>
+{% endblock content %}
