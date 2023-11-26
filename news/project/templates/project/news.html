@@ -5,7 +5,7 @@
 {% load custom_censor %}
 
 {% block title %}
-Products
+Posts
 {% endblock title %}
 
 {% block content %}
@@ -26,6 +26,12 @@ Products
    <h1>Новости!</h1>
    <h3>{% current_time '%b %d %Y' %}</h3>
    <hr>
+
+  {# Теперь будем проверять не request.user.is_authenticated, а конкретные права #}
+    {% if perms.project.add_post %}
+    <a href="{% url 'post_create' %}">Добавить новость</a>
+    {% endif %}
+
    {% if products %}
        <table>
            <tr>
@@ -33,6 +39,10 @@ Products
                <td>Описание</td>
                <td>Дата загрузки</td>
 
+               {# Условие получается составным. #}
+               {% if perms.simpleapp.change_product or perms.project.delete_post %}
+               <td>Действия</td>
+               {% endif %}
            </tr>
 
            {% for product in products %}
@@ -41,6 +51,13 @@ Products
                <td>{{ post.text|censor.description|truncatewords:20 }}</td>
                <td>{{ post.time_loaded|date:"F d, Y" }}</td>
 
+               {# А здесь доступ для каждой ссылки теперь будем проверять отдельно #}
+               {% if <perms class="project"></perms> %}
+               <a href="{% url 'change_post' pk=post.id %}">Изменить</a>
+               {% endif %}
+               {% if perms.simpleapp.delete_product %}
+               <a href="{% url 'delete_post' post.id %}">Удалить</a>
+               {% endif %}
            </tr>
            {% endfor %}
 
